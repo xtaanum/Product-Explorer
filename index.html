@@ -3,9 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product Explorere</title>
+    <title>Product Explorer</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    
+    <h1>Product Explorer</h1>
+
+    <div class="toolbar">
+        <div class="search-wrap">
+            <input type="text" id="favoritesbutton" placeholder="Search for the product here">
+            <button id="searchbutton">Favorites</button>
+        </div>
+
+        <select aria-label="Filter products">
+            <option value="all">All Products</option>
+            <option value="favorites">Favorites</option>
+        </select>
+
+        <select id="pricesort" aria-label="Sort by price">
+            <option value="price">Sort by price</option>
+            <option value="high">High to Low</option>
+            <option value="low">Low to High</option>
+        </select>
+    </div>
+
+    <div id="statusMessage"></div>
+    <main id="productContainer"></main>
+
+    <div class="detail-panel">
+        <h3>Product details</h3>
+        <div class="detail-layout">
+            <img id="productImage" src="" alt="Product Image">
+            <div class="detail-form">
+                <input type="text" id="productName" placeholder="Product Name">
+                <input type="text" id="productCategory" placeholder="Product Category">
+                <input type="text" id="productPrice" placeholder="Product Price">
+                <input type="text" id="productDescription" placeholder="Product Description">
+            </div>
+        </div>
+    </div>
 </body>
 </html>
