@@ -2,7 +2,8 @@ const API_URL = "https://fakestoreapi.com/products";
 
 const productContainer = document.getElementById("productContainer");
 const statusMessage = document.getElementById("statusMessage");
-const searchInput = document.getElementById("favoritesbutton");
+const searchInput = document.getElementById("searchInput");
+const searchButton = document.getElementById("searchbutton");
 const priceSort = document.getElementById("pricesort");
 const productImage = document.getElementById("productImage");
 const productName = document.getElementById("productName");
@@ -107,6 +108,7 @@ async function fetchProducts() {
 }
 
 searchInput.addEventListener("input", filterAndDisplayProducts);
+searchButton.addEventListener("click", filterAndDisplayProducts);
 priceSort.addEventListener("change", filterAndDisplayProducts);
 
 fetchProducts();
