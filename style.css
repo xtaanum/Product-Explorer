@@ -151,6 +151,22 @@
             color: var(--primary-dark);
         }
 
+        .favorite-button {
+            margin-right: 8px;
+            padding: 8px 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--card);
+            color: var(--text);
+            cursor: pointer;
+        }
+
+        .favorite-button[aria-pressed="true"] {
+            border-color: var(--primary);
+            color: var(--primary-dark);
+            font-weight: 700;
+        }
+
         .product-card p {
             margin: 0;
             line-height: 1.6;

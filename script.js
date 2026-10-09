@@ -4,6 +4,7 @@ const productContainer = document.getElementById("productContainer");
 const statusMessage = document.getElementById("statusMessage");
 const searchInput = document.getElementById("searchInput");
 const searchButton = document.getElementById("searchbutton");
+const productFilter = document.getElementById("productFilter");
 const priceSort = document.getElementById("pricesort");
 const productImage = document.getElementById("productImage");
 const productName = document.getElementById("productName");
@@ -12,6 +13,36 @@ const productPrice = document.getElementById("productPrice");
 const productDescription = document.getElementById("productDescription");
 
 let products = [];
+const FAVORITES_STORAGE_KEY = "product-explorer-favorites";
+
+function loadFavorites() {
+    try {
+        const savedFavorites = localStorage.getItem(FAVORITES_STORAGE_KEY);
+        if (savedFavorites === null) {
+            return new Set();
+        }
+
+        const favoriteIds = JSON.parse(savedFavorites);
+        if (!Array.isArray(favoriteIds) || !favoriteIds.every(Number.isInteger)) {
+            throw new Error("Saved favorites have an invalid format.");
+        }
+
+        return new Set(favoriteIds);
+    } catch (error) {
+        console.error("Could not load saved favorites:", error);
+        return new Set();
+    }
+}
+
+const favoriteIds = loadFavorites();
+
+function saveFavorites() {
+    try {
+        localStorage.setItem(FAVORITES_STORAGE_KEY, JSON.stringify([...favoriteIds]));
+    } catch (error) {
+        console.error("Could not save favorites:", error);
+    }
+}
 
 function displayProducts(items) {
     productContainer.replaceChildren();
@@ -52,8 +83,24 @@ function displayProducts(items) {
         detailsButton.textContent = "View Details";
         detailsButton.addEventListener("click", () => showProductDetails(product));
 
+        const favoriteButton = document.createElement("button");
+        favoriteButton.type = "button";
+        favoriteButton.className = "favorite-button";
+        favoriteButton.setAttribute("aria-pressed", String(favoriteIds.has(product.id)));
+        favoriteButton.textContent = favoriteIds.has(product.id) ? "Remove favorite" : "Add to favorites";
+        favoriteButton.addEventListener("click", () => {
+            if (favoriteIds.has(product.id)) {
+                favoriteIds.delete(product.id);
+            } else {
+                favoriteIds.add(product.id);
+            }
+
+            saveFavorites();
+            filterAndDisplayProducts();
+        });
+
         meta.append(category, price);
-        content.append(title, meta, detailsButton);
+        content.append(title, meta, favoriteButton, detailsButton);
         productCard.append(image, content);
         productContainer.appendChild(productCard);
     });
@@ -70,11 +117,14 @@ function showProductDetails(product) {
 
 function filterAndDisplayProducts() {
     const searchTerm = searchInput.value.trim().toLowerCase();
-    const visibleProducts = products.filter(product =>
-        `${product.title} ${product.category} ${product.description}`
+    const visibleProducts = products.filter(product => {
+        const matchesSearch = `${product.title} ${product.category} ${product.description}`
             .toLowerCase()
-            .includes(searchTerm)
-    );
+            .includes(searchTerm);
+        const matchesFilter = productFilter.value !== "favorites" || favoriteIds.has(product.id);
+
+        return matchesSearch && matchesFilter;
+    });
 
     if (priceSort.value === "high") {
         visibleProducts.sort((a, b) => Number(b.price) - Number(a.price));
@@ -109,6 +159,7 @@ async function fetchProducts() {
 
 searchInput.addEventListener("input", filterAndDisplayProducts);
 searchButton.addEventListener("click", filterAndDisplayProducts);
+productFilter.addEventListener("change", filterAndDisplayProducts);
 priceSort.addEventListener("change", filterAndDisplayProducts);
 
 fetchProducts();

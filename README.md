@@ -6,6 +6,7 @@ Product Explorer is a small, browser-based product catalog. It loads products fr
 
 - Browse product images, names, categories, and prices.
 - Search products by title, category, or description.
+- Mark products as favorites and filter the list to show only favorites. Favorites are saved in the browser.
 - Sort products from high to low or low to high by price.
 - See loading, empty-search, and request-error messages.
 
